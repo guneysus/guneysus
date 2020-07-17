@@ -107,12 +107,12 @@ def fetch_tils():
 
 def fetch_blog_entries():
     return [] # TODO
-    entries = feedparser.parse("https://simonwillison.net/atom/entries/")["entries"]
+    entries = feedparser.parse("http://blog.guneysu.xyz/index.xml")["entries"]
     return [
         {
             "title": entry["title"],
-            "url": entry["link"].split("#")[0],
-            "published": entry["published"].split("T")[0],
+            "url": "http://blog.guneysu.xyz" + entry["link"],
+            "published": entry["pubDate"],
         }
         for entry in entries
     ]
