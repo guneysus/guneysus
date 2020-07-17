@@ -3,7 +3,7 @@
 
 ### On my blog
 <!-- blog starts -->
-- lorem ipsum
+
 <!-- blog ends -->
 </td><td valign="top" width="50%">
 
