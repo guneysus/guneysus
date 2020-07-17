@@ -14,15 +14,6 @@ client = GraphqlClient(endpoint="https://api.github.com/graphql")
 
 TOKEN = os.environ.get("SIMONW_TOKEN", "")
 
-def uprint(*objects, sep=' ', end='\n', file=sys.stdout):
-    enc = file.encoding
-    if enc == 'UTF-8':
-        print(*objects, sep=sep, end=end, file=file)
-    else:
-        f = lambda obj: str(obj).encode(enc, errors='backslashreplace').decode(enc)
-        print(*map(f, objects), sep=sep, end=end, file=file)
-
-
 def replace_chunk(content, marker, chunk, inline=False):
     r = re.compile(
         r"<!\-\- {} starts \-\->.*<!\-\- {} ends \-\->".format(marker, marker),
@@ -68,7 +59,7 @@ def fetch_contributions_query(after_cursor=None):
 {
   viewer {
     createdAt
-    repositoriesContributedTo(last: 100, orderBy: {field: STARGAZERS, direction: DESC}, after:AFTER) {
+    repositoriesContributedTo(first: 100, orderBy: {field: STARGAZERS, direction: DESC}, includeUserRepositories: false, contributionTypes: COMMIT, after:AFTER) {
       nodes {
         isArchived
         homepageUrl
@@ -93,6 +84,7 @@ def fetch_contributions_query(after_cursor=None):
     }
   }
 }
+
 """.replace(
         "AFTER", '"{}"'.format(after_cursor) if after_cursor else "null"
     )
@@ -107,9 +99,9 @@ def fetch_contributions(oauth_token):
             query=fetch_contributions_query(after_cursor),
             headers={"Authorization": "Bearer {}".format(oauth_token)},
         )
-        print()
+        # print()
         # print(json.dumps(data, indent=4))
-        print()        
+        # print()        
         for contrib in data["data"]["viewer"]["repositoriesContributedTo"]["nodes"]:
             contribs.append(contrib)
 
@@ -123,7 +115,8 @@ def fetch_contributions(oauth_token):
             name=item["name"],
             nameWithOwner=item["nameWithOwner"],
             shortDescriptionHTML=item["shortDescriptionHTML"],
-            homepageUrl=item["homepageUrl"]
+            homepageUrl=item["homepageUrl"],
+            forkCount=item["forkCount"]
         ) 
         for item in contribs
     ]
@@ -143,9 +136,9 @@ def fetch_releases(oauth_token):
             query=make_query(after_cursor),
             headers={"Authorization": "Bearer {}".format(oauth_token)},
         )
-        print()
+        # print()
         # print(json.dumps(data, indent=4))
-        print()
+        # print()
         for repo in data["data"]["viewer"]["repositories"]["nodes"]:
             if repo["releases"]["totalCount"] and repo["name"] not in repo_names:
                 repos.append(repo)
@@ -184,10 +177,10 @@ def fetch_blog_entries():
     # return [] # TODO
     entries = feedparser.parse("http://blog.guneysu.xyz/index.xml")["entries"]
 
-    print()
-    print(len(entries))
+    # print()
+    # print(len(entries))
     # print(json.dumps(entries, indent=2))
-    print()
+    # print()
 
     return [
         {
@@ -240,7 +233,7 @@ if __name__ == "__main__":
     contribs_md = "\n".join(
         [
             (
-                "* {stars} stars [{name}({nameWithOwner})]: {shortDescriptionHTML}\n"
+                "* {stars}⭐ [{name}]({nameWithOwner}): {shortDescriptionHTML}\n"
                 "<br>[{name}]({homepageUrl})"
             ).format(**c)
             for c in contribs
@@ -254,7 +247,7 @@ if __name__ == "__main__":
     #     contribs_content, "contribs", contribs_md
     # )
     io.open(contribs_file, "w", encoding="utf-8").write(contribs_md)
-    # uprint(contribs_content)
+    # print(contribs_content)
     # rewritten = replace_chunk(rewritten, "contribs", contribs_content)
 
     # tils = fetch_tils()
@@ -270,7 +263,7 @@ if __name__ == "__main__":
     # )
     # rewritten = replace_chunk(rewritten, "tils", tils_md)
 
-    entries = fetch_blog_entries()[:5]
+    entries = fetch_blog_entries()[:10]
     entries_md = "\n".join(
         ["* [{title}]({url}) - {published}".format(**entry) for entry in entries]
     )
