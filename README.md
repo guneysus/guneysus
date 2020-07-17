@@ -1,15 +1,9 @@
-<table>
-<tr><td valign="top" width="50%">
-
-### On my blog
+## latest posts
 <!-- blog starts -->
-
+- lorem ipsum
 <!-- blog ends -->
-</td><td valign="top" width="50%">
 
-### Contributions
+## contributions
 <!-- contribs starts -->
 - lorem ipsum
 <!-- contribs ends -->
-</td></tr>
-</table>
