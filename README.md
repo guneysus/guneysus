@@ -10,4 +10,4 @@
 
 | latest posts | contributions |
 | ------------ | ------------- |
-| - lorem ipsum | - di amet    |
+| lorem ipsum | di amet    |
