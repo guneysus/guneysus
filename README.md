@@ -1,6 +1,6 @@
 ## latest posts
 <!-- blog starts -->
-- lorem ipsum
+
 <!-- blog ends -->
 
 ## contributions
