@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## latest posts
 <!-- blog starts -->
 * [IIS Üzerinde Çalışan bir ASP.NET Core Uygulamasını HTTP İsteğiyle Sonlandırmak](http://blog.guneysu.xyz/post/stopping-aspnetcore-web-via-http/) - Thu, 14 May 2020 17:56:00 +0300
@@ -30,4 +29,3 @@
 * 0⭐ [pytotube](guneysus-archieve/pytotube): Simple 1D Thermal problem solver
 <br>[pytotube]()
 <!-- contribs ends -->
->>>>>>> 7600d4363a706b5f2e199f5fc976496bde7ec25d
