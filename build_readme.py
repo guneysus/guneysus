@@ -5,12 +5,22 @@ import json
 import pathlib
 import re
 import os
+import io
+import sys
 
 root = pathlib.Path(__file__).parent.resolve()
 client = GraphqlClient(endpoint="https://api.github.com/graphql")
 
 
 TOKEN = os.environ.get("SIMONW_TOKEN", "")
+
+def uprint(*objects, sep=' ', end='\n', file=sys.stdout):
+    enc = file.encoding
+    if enc == 'UTF-8':
+        print(*objects, sep=sep, end=end, file=file)
+    else:
+        f = lambda obj: str(obj).encode(enc, errors='backslashreplace').decode(enc)
+        print(*map(f, objects), sep=sep, end=end, file=file)
 
 
 def replace_chunk(content, marker, chunk, inline=False):
@@ -94,11 +104,11 @@ def fetch_contributions(oauth_token):
 
     while has_next_page:
         data = client.execute(
-            query=make_query(after_cursor),
+            query=fetch_contributions_query(after_cursor),
             headers={"Authorization": "Bearer {}".format(oauth_token)},
         )
         print()
-        print(json.dumps(data, indent=4))
+        # print(json.dumps(data, indent=4))
         print()        
         for contrib in data["data"]["viewer"]["repositoriesContributedTo"]["nodes"]:
             contribs.append(contrib)
@@ -125,7 +135,7 @@ def fetch_releases(oauth_token):
             headers={"Authorization": "Bearer {}".format(oauth_token)},
         )
         print()
-        print(json.dumps(data, indent=4))
+        # print(json.dumps(data, indent=4))
         print()
         for repo in data["data"]["viewer"]["repositories"]["nodes"]:
             if repo["releases"]["totalCount"] and repo["name"] not in repo_names:
@@ -162,13 +172,19 @@ def fetch_tils():
 
 
 def fetch_blog_entries():
-    return [] # TODO
+    # return [] # TODO
     entries = feedparser.parse("http://blog.guneysu.xyz/index.xml")["entries"]
+
+    print()
+    print(len(entries))
+    # print(json.dumps(entries, indent=2))
+    print()
+
     return [
         {
             "title": entry["title"],
-            "url": "http://blog.guneysu.xyz" + entry["link"],
-            "published": entry["pubDate"],
+            "url": entry["link"],
+            "published": entry["published"]
         }
         for entry in entries
     ]
@@ -215,17 +231,21 @@ if __name__ == "__main__":
     contribs_md = "\n".join(
         [
             (
-                "* {stargazers:{totalCount}}⭐ {forkCount}🍴 [{name}({nameWithOwner})]: {primaryLanguage:{name}} {shortDescriptionHTML}\n"
+                "* {forkCount}🍴 [{name}({nameWithOwner})]: {shortDescriptionHTML}\n"
                 "<br>[{name}]({homepageUrl})"
             ).format(**c)
             for c in contribs
         ]
     )
-    contribs_content = contribs_file.open().read()
+
+
+    
+    contribs_content = io.open(contribs_file, encoding='utf-8', errors='ignore').read()
     contribs_content = replace_chunk(
         contribs_content, "contribs", contribs_md
     )
-    contribs_file.open("w").write(contribs_content)
+    io.open(contribs_file, "w", encoding="utf-8").write(contribs_content)
+    # uprint(contribs_content)
 
 
     tils = fetch_tils()
@@ -247,4 +267,5 @@ if __name__ == "__main__":
     )
     rewritten = replace_chunk(rewritten, "blog", entries_md)
 
-    readme.open("w").write(rewritten)
+    io.open(readme, 'w', encoding='utf-8', errors='ignore').write(rewritten)
+    # readme.open("w").write(rewritten)
