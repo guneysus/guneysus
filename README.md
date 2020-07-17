@@ -7,7 +7,3 @@
 <!-- contribs starts -->
 - lorem ipsum
 <!-- contribs ends -->
-
-| latest posts | contributions |
-| ------------ | ------------- |
-| lorem ipsum | di amet    |
