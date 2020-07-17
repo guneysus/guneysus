@@ -117,7 +117,16 @@ def fetch_contributions(oauth_token):
             "hasNextPage"
         ]
         after_cursor = data["data"]["viewer"]["repositoriesContributedTo"]["pageInfo"]["endCursor"]        
-    return contribs
+    return [
+        dict(
+            stars=item["stargazers"]["totalCount"],
+            name=item["name"],
+            nameWithOwner=item["nameWithOwner"],
+            shortDescriptionHTML=item["shortDescriptionHTML"],
+            homepageUrl=item["homepageUrl"]
+        ) 
+        for item in contribs
+    ]
     
 
 def fetch_releases(oauth_token):
@@ -195,43 +204,43 @@ if __name__ == "__main__":
     project_releases = root / "releases.md"
     contribs_file = root / "contrib.md"
 
-
-    releases = fetch_releases(TOKEN)
-    releases.sort(key=lambda r: r["published_at"], reverse=True)
-    md = "\n".join(
-        [
-            "* [{repo} {release}]({url}) - {published_at}".format(**release)
-            for release in releases[:8]
-        ]
-    )
-    readme_contents = readme.open().read()
-    rewritten = replace_chunk(readme_contents, "recent_releases", md)
+    # releases = fetch_releases(TOKEN)
+    # releases.sort(key=lambda r: r["published_at"], reverse=True)
+    # md = "\n".join(
+    #     [
+    #         "* [{repo} {release}]({url}) - {published_at}".format(**release)
+    #         for release in releases[:8]
+    #     ]
+    # )
+    
+    readme_contents = io.open(readme, "r", encoding="utf-8").read()
+    rewritten = replace_chunk(readme_contents, "recent_releases", "")
 
     # Write out full project-releases.md file
-    project_releases_md = "\n".join(
-        [
-            (
-                "* **[{repo}]({repo_url})**: [{release}]({url}) - {published_at}\n"
-                "<br>{description}"
-            ).format(**release)
-            for release in releases
-        ]
-    )
-    project_releases_content = project_releases.open().read()
-    project_releases_content = replace_chunk(
-        project_releases_content, "recent_releases", project_releases_md
-    )
-    project_releases_content = replace_chunk(
-        project_releases_content, "release_count", str(len(releases)), inline=True
-    )
-    project_releases.open("w").write(project_releases_content)
+    # project_releases_md = "\n".join(
+    #     [
+    #         (
+    #             "* **[{repo}]({repo_url})**: [{release}]({url}) - {published_at}\n"
+    #             "<br>{description}"
+    #         ).format(**release)
+    #         for release in releases
+    #     ]
+    # )
+    # project_releases_content = project_releases.open().read()
+    # project_releases_content = replace_chunk(
+    #     project_releases_content, "recent_releases", project_releases_md
+    # )
+    # project_releases_content = replace_chunk(
+    #     project_releases_content, "release_count", str(len(releases)), inline=True
+    # )
+    # project_releases.open("w").write(project_releases_content)
 
 
     contribs = fetch_contributions(TOKEN)
     contribs_md = "\n".join(
         [
             (
-                "* {forkCount}🍴 [{name}({nameWithOwner})]: {shortDescriptionHTML}\n"
+                "* {stars} stars [{name}({nameWithOwner})]: {shortDescriptionHTML}\n"
                 "<br>[{name}]({homepageUrl})"
             ).format(**c)
             for c in contribs
@@ -240,32 +249,33 @@ if __name__ == "__main__":
 
 
     
-    contribs_content = io.open(contribs_file, encoding='utf-8', errors='ignore').read()
-    contribs_content = replace_chunk(
-        contribs_content, "contribs", contribs_md
-    )
-    io.open(contribs_file, "w", encoding="utf-8").write(contribs_content)
+    # contribs_content = io.open(contribs_file, encoding='utf-8', errors='ignore').read()
+    # contribs_content = replace_chunk(
+    #     contribs_content, "contribs", contribs_md
+    # )
+    io.open(contribs_file, "w", encoding="utf-8").write(contribs_md)
     # uprint(contribs_content)
+    # rewritten = replace_chunk(rewritten, "contribs", contribs_content)
 
-
-    tils = fetch_tils()
-    tils_md = "\n".join(
-        [
-            "* [{title}]({url}) - {created_at}".format(
-                title=til["title"],
-                url=til["url"],
-                created_at=til["created_utc"].split("T")[0],
-            )
-            for til in tils
-        ]
-    )
-    rewritten = replace_chunk(rewritten, "tils", tils_md)
+    # tils = fetch_tils()
+    # tils_md = "\n".join(
+    #     [
+    #         "* [{title}]({url}) - {created_at}".format(
+    #             title=til["title"],
+    #             url=til["url"],
+    #             created_at=til["created_utc"].split("T")[0],
+    #         )
+    #         for til in tils
+    #     ]
+    # )
+    # rewritten = replace_chunk(rewritten, "tils", tils_md)
 
     entries = fetch_blog_entries()[:5]
     entries_md = "\n".join(
         ["* [{title}]({url}) - {published}".format(**entry) for entry in entries]
     )
     rewritten = replace_chunk(rewritten, "blog", entries_md)
+    rewritten = replace_chunk(rewritten, "contribs", contribs_md)
 
-    io.open(readme, 'w', encoding='utf-8', errors='ignore').write(rewritten)
+    io.open(readme, "w", encoding="utf-8").write(rewritten)
     # readme.open("w").write(rewritten)
