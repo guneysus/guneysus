@@ -57,6 +57,8 @@ query {
 def fetch_releases(oauth_token):
     repos = []
     releases = []
+    return releases ## TODO
+
     repo_names = set()
     has_next_page = True
     after_cursor = None
@@ -95,6 +97,7 @@ def fetch_releases(oauth_token):
 
 
 def fetch_tils():
+    return [] # TODO
     sql = "select title, url, created_utc from til order by created_utc desc limit 5"
     return httpx.get(
         "https://til.simonwillison.net/til.json",
@@ -103,6 +106,7 @@ def fetch_tils():
 
 
 def fetch_blog_entries():
+    return [] # TODO
     entries = feedparser.parse("https://simonwillison.net/atom/entries/")["entries"]
     return [
         {
