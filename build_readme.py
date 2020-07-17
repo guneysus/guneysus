@@ -230,10 +230,10 @@ if __name__ == "__main__":
 
 
     contribs = fetch_contributions(TOKEN)
-    contribs_md = "\n".join(
+    contribs_md = "| stars | name | description |\n| - | - | - |\n" + "\n".join(
         [
             (
-                "* {stars}⭐ [{name}]({nameWithOwner}): {shortDescriptionHTML}\n"
+                " {stars}⭐ | [{name}]({nameWithOwner}) | {shortDescriptionHTML}"
                 "<br>[{name}]({homepageUrl})"
             ).format(**c)
             for c in contribs
@@ -264,8 +264,8 @@ if __name__ == "__main__":
     # rewritten = replace_chunk(rewritten, "tils", tils_md)
 
     entries = fetch_blog_entries()[:10]
-    entries_md = "\n".join(
-        ["* [{title}]({url}) - {published}".format(**entry) for entry in entries]
+    entries_md ="| title | published |\n| - | - | \n" + "\n".join(
+        ["|[{title}]({url}) | {published} |".format(**entry) for entry in entries]
     )
     rewritten = replace_chunk(rewritten, "blog", entries_md)
     rewritten = replace_chunk(rewritten, "contribs", contribs_md)
