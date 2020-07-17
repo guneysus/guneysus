@@ -53,6 +53,62 @@ query {
         "AFTER", '"{}"'.format(after_cursor) if after_cursor else "null"
     )
 
+def fetch_contributions_query(after_cursor=None):
+    return """
+{
+  viewer {
+    createdAt
+    repositoriesContributedTo(last: 100, orderBy: {field: STARGAZERS, direction: DESC}, after:AFTER) {
+      nodes {
+        isArchived
+        homepageUrl
+        forkCount
+        nameWithOwner
+        primaryLanguage {
+          name
+          color
+        }
+        stargazers {
+          totalCount
+        }
+        shortDescriptionHTML
+        url
+        name
+      }
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+""".replace(
+        "AFTER", '"{}"'.format(after_cursor) if after_cursor else "null"
+    )
+
+def fetch_contributions(oauth_token):
+    has_next_page = True
+    after_cursor = None
+    contribs = []
+
+    while has_next_page:
+        data = client.execute(
+            query=make_query(after_cursor),
+            headers={"Authorization": "Bearer {}".format(oauth_token)},
+        )
+        print()
+        print(json.dumps(data, indent=4))
+        print()        
+        for contrib in data["data"]["viewer"]["repositoriesContributedTo"]["nodes"]:
+            contribs.append(contrib)
+
+        has_next_page = data["data"]["viewer"]["repositoriesContributedTo"]["pageInfo"][
+            "hasNextPage"
+        ]
+        after_cursor = data["data"]["viewer"]["repositoriesContributedTo"]["pageInfo"]["endCursor"]        
+    return contribs
+    
 
 def fetch_releases(oauth_token):
     repos = []
@@ -121,6 +177,9 @@ def fetch_blog_entries():
 if __name__ == "__main__":
     readme = root / "README.md"
     project_releases = root / "releases.md"
+    contribs_file = root / "contrib.md"
+
+
     releases = fetch_releases(TOKEN)
     releases.sort(key=lambda r: r["published_at"], reverse=True)
     md = "\n".join(
@@ -150,6 +209,24 @@ if __name__ == "__main__":
         project_releases_content, "release_count", str(len(releases)), inline=True
     )
     project_releases.open("w").write(project_releases_content)
+
+
+    contribs = fetch_contributions(TOKEN)
+    contribs_md = "\n".join(
+        [
+            (
+                "* {stargazers:{totalCount}}⭐ {forkCount}🍴 [{name}({nameWithOwner})]: {primaryLanguage:{name}} {shortDescriptionHTML}\n"
+                "<br>[{name}]({homepageUrl})"
+            ).format(**c)
+            for c in contribs
+        ]
+    )
+    contribs_content = contribs_file.open().read()
+    contribs_content = replace_chunk(
+        contribs_content, "contribs", contribs_md
+    )
+    contribs_file.open("w").write(contribs_content)
+
 
     tils = fetch_tils()
     tils_md = "\n".join(
