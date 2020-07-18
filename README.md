@@ -3,6 +3,7 @@
 <!-- blog starts -->
 | title | published |
 | - | - | 
+|[C# İle Fonksiyonel Programlamaya Giriş - Delegeler](http://blog.guneysu.xyz/post/functional-programming-with-csharp-intro-delegates/) | Sat, 18 Jul 2020 00:00:00 +0000 |
 |[IIS Üzerinde Çalışan bir ASP.NET Core Uygulamasını HTTP İsteğiyle Sonlandırmak](http://blog.guneysu.xyz/post/stopping-aspnetcore-web-via-http/) | Thu, 14 May 2020 17:56:00 +0300 |
 |[GIT Capture the Flag! 🏴](http://blog.guneysu.xyz/post/odulsuz-git-ctf-yarismasi/) | Wed, 29 Apr 2020 21:42:11 +0300 |
 |[[Çözüm] GIT Capture the Flag, Git İç Yapısı ve Git Objeleri](http://blog.guneysu.xyz/post/odulsuz-git-ctf-yarismasi-cozum/) | Wed, 29 Apr 2020 21:42:11 +0300 |
@@ -12,7 +13,6 @@
 |[Örneklerle Refactoring - 1](http://blog.guneysu.xyz/post/orneklerle-refactoring-i/) | Sat, 07 Apr 2018 22:43:54 +0300 |
 |[Statik Bir Hugo Web Sitesini AWS S3 üzerine TravisCI ile Yayınlamak](http://blog.guneysu.xyz/post/statik-bir-hugo-web-sitesini-aws-s3-uzerine-travisci-ile-yayinlamak/) | Sat, 24 Mar 2018 20:12:05 +0300 |
 |[Tornado Debug Toolbar](http://blog.guneysu.xyz/side-projects/tornado-debug-toolbar/) | Fri, 23 Jun 2017 00:00:00 +0000 |
-|[Flask and SocketIO Example](http://blog.guneysu.xyz/side-projects/flask-socketio/) | Sun, 18 Jun 2017 00:00:00 +0000 |
 <!-- blog ends -->
 
 ## contributions
