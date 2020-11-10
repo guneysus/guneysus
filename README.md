@@ -3,6 +3,7 @@
 <!-- blog starts -->
 | title | published |
 | - | - | 
+<<<<<<< HEAD
 |[IIS Üzerinde Çalışan bir ASP.NET Core Uygulamasını HTTP İsteğiyle Sonlandırmak](http://blog.guneysu.xyz/post/stopping-aspnetcore-web-via-http/) | Thu, 14 May 2020 17:56:00 +0300 |
 |[GIT Capture the Flag! 🏴](http://blog.guneysu.xyz/post/odulsuz-git-ctf-yarismasi/) | Wed, 29 Apr 2020 21:42:11 +0300 |
 |[[Çözüm] GIT Capture the Flag, Git İç Yapısı ve Git Objeleri](http://blog.guneysu.xyz/post/odulsuz-git-ctf-yarismasi-cozum/) | Wed, 29 Apr 2020 21:42:11 +0300 |

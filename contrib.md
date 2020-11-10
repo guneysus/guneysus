@@ -10,4 +10,3 @@
  22⭐ | [webtty](nickvdyck/webtty) | <g-emoji class="g-emoji" alias="electric_plug" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f50c.png">🔌</g-emoji> A simple command-line tool for sharing a terminal over the web.<br>[webtty]()
  2⭐ | [AtikJS](AhmetHuseyinDOK/AtikJS) | A hobby project to dynamically render html with a data driven approach featuring build in hash routing<br>[AtikJS]()
  0⭐ | [AidManagementPortal.API](aidmanagementportal/AidManagementPortal.API) | AidManagementPortal.API<br>[AidManagementPortal.API](None)
- 0⭐ | [pytotube](guneysus-archieve/pytotube) | Simple 1D Thermal problem solver<br>[pytotube]()
