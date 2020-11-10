@@ -59,7 +59,7 @@ def fetch_contributions_query(after_cursor=None):
 {
   viewer {
     createdAt
-    repositoriesContributedTo(first: 100, orderBy: {field: STARGAZERS, direction: DESC}, includeUserRepositories: false, contributionTypes: COMMIT, after:AFTER) {
+    repositoriesContributedTo(first: 100, orderBy: {field: STARGAZERS, direction: DESC}, includeUserRepositories: false, contributionTypes: [COMMIT, ISSUE], after:AFTER) {
       nodes {
         isArchived
         homepageUrl
